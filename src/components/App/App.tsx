@@ -5,9 +5,9 @@ import MovieGrid from '../MovieGrid/MovieGrid';
 import MovieModal from '../MovieModal/MovieModal';
 import Loader from '../Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import ReactPaginate from 'react-paginate';
 import { useMovies } from '../../hooks/useMovies';
 import { Movie } from '../../types/movie';
-import ReactPaginate from 'react-paginate';
 
 import styles from './App.module.css';
 
@@ -16,10 +16,7 @@ export default function App() {
   const [page, setPage] = useState(1);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const { data, isLoading, isError, error, isFetching } = useMovies(
-    query,
-    page
-  );
+  const { data, isLoading, error } = useMovies(query, page);
 
   const handleSearch = (newQuery: string) => {
     if (newQuery.trim() === '') {
@@ -45,7 +42,7 @@ export default function App() {
       <SearchBar onSubmit={handleSearch} />
 
       {isLoading && <Loader />}
-      {isError && <ErrorMessage message={error.message} />}
+      {error && <ErrorMessage message="Failed to fetch movies." />}
 
       {data && data.results.length > 0 && (
         <>
@@ -62,6 +59,7 @@ export default function App() {
               previousLabel="←"
             />
           )}
+
           <MovieGrid movies={data.results} onSelect={handleSelect} />
         </>
       )}
@@ -69,8 +67,6 @@ export default function App() {
       {selectedMovie && (
         <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
       )}
-
-      {isFetching && !isLoading && <Loader />}
     </div>
   );
 }

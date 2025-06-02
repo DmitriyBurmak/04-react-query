@@ -11,9 +11,12 @@ export interface MovieApiResponse {
   total_pages: number;
 }
 
-export const fetchMovies = async (query: string): Promise<MovieApiResponse> => {
+export const fetchMovies = async (
+  query: string,
+  page: number
+): Promise<MovieApiResponse> => {
   const response = await axios.get<MovieApiResponse>(BASE_URL, {
-    params: { query },
+    params: { query, page },
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },

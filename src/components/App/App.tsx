@@ -32,11 +32,13 @@ export default function App() {
     }
   }, [isSuccess, data]);
 
-  const handleSearch = (formData: FormData): void => {
-    const queryValue = (formData.get('query') as string)?.trim();
-    if (!queryValue) return;
+  const handleSearch = (query: string): void => {
+    if (!query.trim()) {
+      toast.error('Please enter your search query.');
+      return;
+    }
 
-    setQuery(queryValue);
+    setQuery(query);
     setPage(1);
   };
 
@@ -55,7 +57,7 @@ export default function App() {
   return (
     <div className={styles.app}>
       <Toaster position="top-center" />
-      <SearchBar action={handleSearch} />
+      <SearchBar onSubmit={handleSearch} />
 
       {isPending && query.trim() !== '' && <Loader />}
       {isError && <ErrorMessage message="Failed to fetch movies." />}

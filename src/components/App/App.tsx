@@ -40,6 +40,7 @@ export default function App() {
 
     setQuery(query);
     setPage(1);
+    setSelectedMovie(null); // очищаємо стару модалку при новому запиті
   };
 
   const handleSelect = (movie: Movie): void => {
@@ -64,17 +65,19 @@ export default function App() {
 
       {isSuccess && data.results.length > 0 && (
         <>
-          <ReactPaginate
-            pageCount={data.total_pages}
-            pageRangeDisplayed={5}
-            marginPagesDisplayed={1}
-            onPageChange={handlePageChange}
-            forcePage={page - 1}
-            containerClassName={styles.pagination}
-            activeClassName={styles.active}
-            nextLabel="→"
-            previousLabel="←"
-          />
+          {data.total_pages > 1 && ( // лише якщо є більше ніж 1 сторінка
+            <ReactPaginate
+              pageCount={data.total_pages}
+              pageRangeDisplayed={5}
+              marginPagesDisplayed={1}
+              onPageChange={handlePageChange}
+              forcePage={page - 1}
+              containerClassName={styles.pagination}
+              activeClassName={styles.active}
+              nextLabel="→"
+              previousLabel="←"
+            />
+          )}
 
           <MovieGrid movies={data.results} onSelect={handleSelect} />
         </>

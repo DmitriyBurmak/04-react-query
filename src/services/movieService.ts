@@ -8,12 +8,17 @@ export const fetchMovies = async (
   query: string,
   page: number
 ): Promise<MovieApiResponse> => {
-  const response = await axios.get<MovieApiResponse>(BASE_URL, {
-    params: { query, page },
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
+  try {
+    const response = await axios.get<MovieApiResponse>(BASE_URL, {
+      params: { query, page },
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    throw new Error('Failed to fetch movies from TMDB API.');
+  }
 };
